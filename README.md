@@ -1,5 +1,10 @@
 # 🧠 TG Summary Bot
 
+[![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/)  
+[![Aiogram](https://img.shields.io/badge/aiogram-3.22-brightgreen)](https://docs.aiogram.dev/)  
+[![OpenAI](https://img.shields.io/badge/OpenAI-API-orange)](https://platform.openai.com/)  
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 **TG Summary Bot** — это Telegram-бот, который ежедневно собирает обсуждения из крипто-чатов и формирует краткое саммари.  
 Он выделяет **авторов идей**, **тикеры**, **контракты**, **ссылки** и помогает быстро понять, что обсуждали за последние 24 часа.
 
