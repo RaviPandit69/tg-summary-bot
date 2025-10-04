@@ -120,6 +120,8 @@ He quietly collects messages in groups where he is a member — no admin rights 
 ```bash
 git pull origin main
 launchctl kickstart -k gui/$UID/com.tgsummary.bot
+```
+
 🚀 Coming next
 
 🧩 User-mode watcher (Telethon) — to read closed chats where only your personal account is a member
