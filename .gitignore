@@ -1,4 +1,7 @@
 .venv/
 __pycache__/
 messages.sqlite
-.env
+.envbot.log
+bot.err
+bot_backup_*.py
+bot_single_backup.py
