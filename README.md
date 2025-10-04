@@ -1,5 +1,4 @@
-# 🧠 TG Summary Bot
-<p align="center">
+<h1 align="center">🤖 TG Crypto Chat Summarizer Bot</h1><p align="center">
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.11+-blue?logo=python&logoColor=white" alt="Python"></a>
   <a href="https://github.com/aiogram/aiogram"><img src="https://img.shields.io/badge/Aiogram-3.x-4B8BBE?logo=telegram&logoColor=white" alt="Aiogram"></a>
   <a href="https://platform.openai.com/"><img src="https://img.shields.io/badge/OpenAI-API-black?logo=openai&logoColor=white" alt="OpenAI"></a>
