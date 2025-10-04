@@ -1,9 +1,11 @@
 # 🧠 TG Summary Bot
-
-[![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/)  
-[![Aiogram](https://img.shields.io/badge/aiogram-3.22-brightgreen)](https://docs.aiogram.dev/)  
-[![OpenAI](https://img.shields.io/badge/OpenAI-API-orange)](https://platform.openai.com/)  
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+<p align="center">
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.11+-blue?logo=python&logoColor=white" alt="Python"></a>
+  <a href="https://github.com/aiogram/aiogram"><img src="https://img.shields.io/badge/Aiogram-3.x-4B8BBE?logo=telegram&logoColor=white" alt="Aiogram"></a>
+  <a href="https://platform.openai.com/"><img src="https://img.shields.io/badge/OpenAI-API-black?logo=openai&logoColor=white" alt="OpenAI"></a>
+  <a href="https://github.com/dant1k/tg-summary-bot/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License"></a>
+  <a href="https://github.com/dant1k/tg-summary-bot/stargazers"><img src="https://img.shields.io/github/stars/dant1k/tg-summary-bot?color=yellow&logo=github&label=Stars" alt="GitHub Stars"></a>
+</p>
 
 **TG Summary Bot** is a Telegram bot that collects discussions from crypto chats every day and generates a brief summary.  
 It highlights **idea authors**, **tickers**, **contracts**, **links**, and helps you quickly understand what has been discussed over the past 24 hours.
