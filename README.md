@@ -101,3 +101,29 @@ Telegram: https://t.me/chat1k_summarizer_bot
 
 MIT License © 2025 dant1k
 
+## 🔄 Update — October 2025
+
+### 🧠 Version: DM Summaries Mode
+**Description:**  
+Bot now sends all daily and manual summaries **directly to your DM**, instead of posting them in group chats.  
+He quietly collects messages in groups where he is a member — no admin rights required.
+
+**Changes:**
+- All `/commands` work **only in private chat** with the bot  
+- `/summary_now <chat_id>` sends a 24-hour digest in DM  
+- `/auto_on` enables daily digest at 09:00  
+- `/auto_off` disables automation  
+- Supports grouping by user, tickers (`$APT`, `$SOL`), and links  
+- Cleaner message formatting for easier reading  
+
+**How to update (already done for you):**
+```bash
+git pull origin main
+launchctl kickstart -k gui/$UID/com.tgsummary.bot
+🚀 Coming next
+
+🧩 User-mode watcher (Telethon) — to read closed chats where only your personal account is a member
+
+🧰 Web dashboard for chat analytics
+
+📊 Inline graphs of activity per token / user
