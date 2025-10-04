@@ -1,0 +1,4 @@
+aiogram
+openai
+python-dotenv
+apscheduler
