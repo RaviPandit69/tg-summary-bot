@@ -5,6 +5,7 @@ import logging
 import sqlite3
 import datetime as dt
 from collections import defaultdict
+from typing import Optional
 
 from aiogram import Bot, Dispatcher, F
 from aiogram.types import (
@@ -42,8 +43,9 @@ scheduler = AsyncIOScheduler(timezone="Europe/Kyiv")
 DB_PATH = "messages.sqlite"
 
 # =================== РЕГУЛЯРКИ ===================
-CASHTAG = re.compile(r"\$?[A-Z0-9]{2,10}")
-URL = re.compile(r"https?://\S+")
+CASHTAG = re.compile(r"\$?[A-Z0-9]{2,10}")          # $APT, SOL, PYTH
+URL = re.compile(r"https?://\S+")                    # ссылки
+MENTION = re.compile(r"@([A-Za-z0-9_]{3,})")         # @username
 
 # =================== БАЗА ДАННЫХ ===================
 def ensure_schema(conn: sqlite3.Connection):
@@ -80,11 +82,34 @@ def db():
     return conn
 
 # =================== ВСПОМОГАТЕЛЬНЫЕ ===================
+
+def normalize_username(u: Optional[str]) -> Optional[str]:
+    """Убираем @, если он был сохранён ранее."""
+    if not u:
+        return u
+    return u[1:] if u.startswith("@") else u
+
+def author_label(username: Optional[str], full_name: Optional[str], uid: Optional[int]) -> str:
+    """Имя автора без @: приоритет full_name → username → id."""
+    if full_name and full_name.strip():
+        return full_name.strip()
+    u = normalize_username(username)
+    if u:
+        return u
+    return f"id{uid}" if uid else "Неизвестный"
+
+def clean_text(s: str) -> str:
+    """Убираем @упоминания и лишние пробелы (без потери остального текста)."""
+    s = s or ""
+    s = MENTION.sub(r"\1", s)  # '@nick' -> 'nick'
+    s = re.sub(r"\s+", " ", s).strip()
+    return s
+
 def make_link(chat_id: int, message_id: int | None) -> str:
     if not message_id:
         return ""
     s = str(chat_id)
-    if s.startswith("-100"):
+    if s.startswith("-100"):  # приватные/публичные супергруппы
         s = s[4:]
     return f"https://t.me/c/{s}/{message_id}"
 
@@ -106,11 +131,11 @@ def set_auto_mode(mode: str):
 # =================== СБОР СООБЩЕНИЙ (молча в группах) ===================
 @dp.message(F.chat.type.in_({ChatType.SUPERGROUP, ChatType.GROUP}))
 async def capture(message: Message):
-    if not message.text:
-        return
-    text = message.text.strip()
+    # Сохраняем только текст / подпись, чистим очень короткий мусор
+    text = (message.text or message.caption or "").strip()
     if len(text) < 3:
         return
+
     try:
         conn = db()
         conn.execute(
@@ -119,7 +144,8 @@ async def capture(message: Message):
                 message.chat.id,
                 message.chat.title or "NoTitle",
                 message.from_user.id if message.from_user else None,
-                f"@{message.from_user.username}" if (message.from_user and message.from_user.username) else None,
+                # ⚠️ сохраняем username БЕЗ @
+                normalize_username(message.from_user.username) if (message.from_user and message.from_user.username) else None,
                 message.from_user.full_name if message.from_user else None,
                 text,
                 int(message.date.timestamp()),
@@ -131,9 +157,9 @@ async def capture(message: Message):
     except Exception as e:
         log.exception(f"Ошибка при записи сообщения: {e}")
 
-# =================== САММАРИ ===================
+# =================== САММАРИ (РУ, без @) ===================
 async def summarize_chat(chat_id: int, title: str) -> str:
-    """Оффлайн-саммари за 24 часа: группируем по авторам, даём $тикеры, ссылки и пермалинки."""
+    """Сводка за 24 часа: группируем по авторам, показываем $тикеры, первую ссылку и пермалинки."""
     since = int(dt.datetime.now().timestamp()) - 24 * 3600
     conn = db()
     rows = conn.execute(
@@ -147,31 +173,37 @@ async def summarize_chat(chat_id: int, title: str) -> str:
 
     grouped: dict[str, list[tuple[str, int | None]]] = defaultdict(list)
     for uid, uname, full, text, mid in rows:
-        author = full or uname or f"id:{uid}" or "Без имени"
+        author = author_label(uname, full, uid)
         grouped[author].append((text, mid))
 
-    lines = [f"🧾 <b>Чат:</b> {title}"]
+    out: list[str] = [f"🧾 <b>24h Summary</b> — {title}"]
     for author, msgs in grouped.items():
-        # собрать тикеры по всем сообщениям автора
-        tickers = {t.lstrip("$").upper() for t in CASHTAG.findall(" ".join([m[0] for m in msgs]))}
+        # тикеры по всем сообщениям автора
+        tickers = {t.lstrip("$").upper() for t in CASHTAG.findall(" ".join(m[0] for m in msgs))}
         tickers_fmt = f" [{', '.join(f'${t}' for t in sorted(tickers))}]" if tickers else ""
-        # первая найденная ссылка автора — в шапку (опционально)
+
+        # первая ссылка автора
         first_link = ""
         for txt, _ in msgs:
             m = URL.search(txt)
             if m:
                 first_link = m.group(0)
                 break
-        tail = f" {first_link}" if first_link else ""
-        lines.append(f"• {author}{tickers_fmt}{tail}")
+        tail = f" — {first_link}" if first_link else ""
 
-        # подпункты-идеи (первые 3 по умолчанию)
-        for text, mid in msgs[:3]:
+        out.append(f"• {author}{tickers_fmt}{tail}")
+
+        # подпункты-идеи (до 3 на автора), чистим @внутри текста
+        for txt, mid in msgs[:3]:
             link = make_link(chat_id, mid)
-            preview = text[:150] + ("…" if len(text) > 150 else "")
-            lines.append(f"  — {preview} {link}")
+            preview_raw = txt[:200] + ("…" if len(txt) > 200 else "")
+            preview = clean_text(preview_raw)
+            if link:
+                out.append(f"  — {preview} {link}")
+            else:
+                out.append(f"  — {preview}")
 
-    return "\n".join(lines) + "\n"
+    return "\n".join(out) + "\n"
 
 async def summarize_all_chats():
     conn = db()
@@ -180,12 +212,13 @@ async def summarize_all_chats():
     if not chats:
         await bot.send_message(ADMIN_ID, "Нет активных чатов для авто-сводки.")
         return
+
     await bot.send_message(ADMIN_ID, "📬 Ежедневная сводка:")
     for chat_id, title in chats:
         try:
             report = await summarize_chat(chat_id, title or str(chat_id))
             await bot.send_message(ADMIN_ID, report)
-            await asyncio.sleep(1.5)
+            await asyncio.sleep(1.2)
         except Exception as e:
             log.exception(f"Ошибка сводки для {chat_id}: {e}")
 
@@ -261,7 +294,6 @@ async def summary_now_cmd(msg: Message):
     except Exception:
         await msg.answer("Использование: /summary_now <chat_id>")
         return
-    # получить заголовок если есть
     conn = db()
     row = conn.execute("SELECT title FROM chats WHERE chat_id=?", (chat_id,)).fetchone()
     conn.close()
@@ -309,7 +341,8 @@ async def main():
         )
     scheduler.start()
     await setup_commands()
-    await dp.start_polling(bot)
 
-if __name__ == "__main__":
-    asyncio.run(main())
+    # ВАЖНО: снимаем вебхук и выбрасываем висящие апдейты
+    await bot.delete_webhook(drop_pending_updates=True)
+
+    await dp.start_polling(bot)
